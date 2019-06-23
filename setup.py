@@ -9,12 +9,12 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='zmessage',
+    name='zmq-message-patterns',
     version='0.1.0',
     description='Library to quickly build ZeroMQ based applications.',
     long_description=long_description,
     long_description_content_type='text/x-rst; charset=UTF-8',
-    url='https://github.com/dansan/zmessage',
+    url='https://github.com/dansan/python-zmq-message-patterns/',
     author='Daniel Tröder',
     author_email='daniel@admin-box.com',
     classifiers=[
@@ -32,13 +32,13 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
-    keywords='zmq zeromq pyzmq sockets development',
+    keywords='zmq zeromq pyzmq sockets development parallel-processing concurrency',
     license='MIT',
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
     install_requires=['six', 'pyzmq'],
     project_urls={
-        'Bug Reports': 'https://github.com/dansan/zmessage/issues',
-        'Source': 'https://github.com/dansan/zmessage/',
+        'Bug Reports': 'https://github.com/dansan/python-zmq-message-patterns/issues/',
+        'Source': 'https://github.com/dansan/python-zmq-message-patterns/',
     },
     test_suite='tests',
 )

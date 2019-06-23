@@ -28,10 +28,8 @@ from zmessage.pipeline import Sink, Ventilator, VentilatorToWorkerMessage, Worke
 from .testlogging import setup_logging, update_formatter
 
 try:
-    from typing import Any, Iterator, Optional, Tuple, Type, TypeVar
-    # TODO: move this to pipeline.py
-    VentilatorWorkerMessageType = TypeVar('VentilatorWorkerMessageType', bound='VentilatorToWorkerMessage')
-    WorkerSinkMessageType = TypeVar('WorkerSinkMessageType', bound='WorkerToSinkMessage')
+    from typing import Any, Iterator, Optional, Tuple, Type
+    from zmessage.pipeline import VentilatorWorkerMessageType, WorkerSinkMessageType
 except ImportError:
     pass
 

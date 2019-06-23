@@ -8,6 +8,11 @@ This is the simple_pipeline_test with CPU time burned instead of slept.
 All your CPUs/cores should be maxed out. Tweak NUM_JOBS and BATCH_SIZE
 plus MULTIPLY_REPITITIONS to use more jobs or longer jobs.
 
+Lower VENTILATOR_WORKER_QUEUE_LENGTH if the load balancing fails for lower
+NUM_JOBS. (The first worker gets all jobs, the other workers none: the first
+workers queue is long enough (default: 1000) to receive all jobs. Shorten
+the queue to distribute jobs almost equally again.)
+
       ventilator-------------+
           |                  |
   +-------+------+           |
@@ -33,12 +38,18 @@ from functools import partial
 from collections import OrderedDict
 from multiprocessing import cpu_count, Process
 from zmessage.pipeline import Sink, Ventilator, VentilatorToWorkerMessage, Worker, WorkerToSinkMessage
+try:
+    from typing import Any, Iterator
+    from zmessage.pipeline import VentilatorWorkerMessageType, WorkerSinkMessageType
+except ImportError:
+    pass
 
 
 NUM_WORKERS = max(2, cpu_count())
 NUM_JOBS = 10000
 MULTIPLY_REPITITIONS = 100000
 BATCH_SIZE = 10
+VENTILATOR_WORKER_QUEUE_LENGTH = None  # default: 1000
 
 
 class MultiplyingVentilatorToWorkerMessage(VentilatorToWorkerMessage):
@@ -52,8 +63,8 @@ class MultiplyingWorkerToSinkMessage(WorkerToSinkMessage):
 
 
 class MultiplyingVentilator(Ventilator):
-    def __init__(self, jobs_to_workers_addr, job_ids_to_sink_addr):  # type: (str, str) -> None
-        super(MultiplyingVentilator, self).__init__(jobs_to_workers_addr, job_ids_to_sink_addr)
+    def __init__(self, *args, **kwargs):
+        super(MultiplyingVentilator, self).__init__(*args, jobs_in_hwm=VENTILATOR_WORKER_QUEUE_LENGTH, **kwargs)
         self.jobs_sent = 0
 
     def requests(self):  # type: () -> Iterator[VentilatorWorkerMessageType]
@@ -69,7 +80,7 @@ class MultiplyingWorker(Worker):
     VentilatorWorkerMessageCls = MultiplyingVentilatorToWorkerMessage
 
     def __init__(self, *args, **kwargs):
-        super(MultiplyingWorker, self).__init__(*args, **kwargs)
+        super(MultiplyingWorker, self).__init__(*args, jobs_in_hwm=VENTILATOR_WORKER_QUEUE_LENGTH, **kwargs)
         self.requests_count = 0
         self.results_count = 0
 

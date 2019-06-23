@@ -120,13 +120,18 @@ class Ventilator(ZNode):
 
     Subclass and implement :py:meth:`requests()`.
     """
-    def __init__(self, jobs_to_workers_addr, job_ids_to_sink_addr):  # type: (str, str) -> None
+    def __init__(self, jobs_to_workers_addr, job_ids_to_sink_addr, jobs_in_hwm=None):
+        # type: (str, str, Optional[bool]) -> None
         """
         :param str jobs_to_workers_addr: address to bind to, workers will connect to this (e.g. `tcp://*:5555`)
         :param str job_ids_to_sink_addr: address to bind to, sink will connect to this (e.g. `tcp://*:5556`)
         """
         super(Ventilator, self).__init__()
-        self.add_socket('jobs_to_workers', 'bind', 'PUSH', jobs_to_workers_addr)
+        if jobs_in_hwm:
+            jobs_in_kwargs = dict(rcvhwm=jobs_in_hwm, sndhwm=jobs_in_hwm)
+        else:
+            jobs_in_kwargs = {}
+        self.add_socket('jobs_to_workers', 'bind', 'PUSH', jobs_to_workers_addr, **jobs_in_kwargs)
         self.add_socket('job_ids_to_sink', 'bind', 'PUSH', job_ids_to_sink_addr)
 
     def requests(self):  # type: () -> Iterator[VentilatorWorkerMessageType]
