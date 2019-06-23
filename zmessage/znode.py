@@ -16,8 +16,8 @@ import zmq
 from .zmessage import ZMessage
 
 try:
-    from typing import Any, Dict, List, Optional, Type, TypeVar
-    ZMessageType = TypeVar('ZMessageType', bound=ZMessage)
+    from typing import Any, Dict, List, Optional, Type
+    from .zmessage import ZMessageType
 except ImportError:
     pass
 
@@ -27,7 +27,7 @@ SocketConfig = namedtuple('SocketConfig', ('name', 'method', 'type', 'addr', 'at
 
 
 class ZException(Exception):
-    """Base class of all excpetions created by ZNode"""
+    """Base class of all exceptions created by ZNode"""
     pass
 
 
@@ -250,8 +250,8 @@ class ZNode(object):
         :py:func:`finally` :py:meth:`cleanup()`.
 
         :param bool install_sig_handler: will be passed to :py:meth:`init()`
+        :param bool cleanup: whether to automatically call :py:meth:`cleanup()` after :py:meth:`run()`
         :param args: will be passed to :py:meth:`run()`
-        :param bool: cleanup: whether to automatically call :py:meth:`cleanup()` after :py:meth:`run()`
         :param kwargs: will be passed to :py:meth:`run()`
         :return: whatever :py:meth:`run()` returns
         """

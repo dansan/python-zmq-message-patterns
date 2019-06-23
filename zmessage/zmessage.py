@@ -12,7 +12,8 @@ import collections
 from six import string_types
 
 try:
-    from typing import Any, Dict, Iterable, Iterator, Tuple
+    from typing import Any, Dict, Iterable, Iterator, Tuple, TypeVar
+    ZMessageType = TypeVar('ZMessageType', bound='ZMessage')
 except ImportError:
     pass
 
