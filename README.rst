@@ -10,6 +10,13 @@ Library to make writing applications using `ZeroMQ <http://www.zeromq.org/>`_ me
 
 TODO: explain ``ZMessage`` and ``ZNode`` classes.
 
+Install
+-------
+
+Install through pip::
+
+  pip install zmq-message-patterns
+
 Pipeline
 --------
 
